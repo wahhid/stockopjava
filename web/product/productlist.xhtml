@@ -1,0 +1,171 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+
+            <ui:define name="title">
+                Article - Stock System - Ranch Market
+            </ui:define>
+
+            <ui:define name="content">
+                <f:event type="preRenderComponent" listener="#{articleBean.loadData()}"/>
+                <f:view>
+                    <h:form id="form">
+                        <h1><h:outputText value="Article List"/></h1>
+                        <p:toolbar>                         
+                            <p:toolbarGroup align="left">                                
+                                <p:commandButton id="btndownload" value="Download"  onclick="dlgdownload.show();" image="ui-icon-document" rendered="#{articleBean.allowdownload}" />
+                            </p:toolbarGroup>                  
+                            <p:toolbarGroup align="right">
+                                <p:commandButton id="btnview" value="Detail"  image="ui-icon-document"  oncomplete="dlgdetail.show();" rendered="#{articleBean.allowread}" />                                
+                            </p:toolbarGroup>                               
+                        </p:toolbar>
+                        <p:panel header="Filter" toggleable="true" closable="false" toggleSpeed="500" closeSpeed="2000" collapsed="true" >
+                            <h:panelGrid columns="3">                                
+                                <h:outputText value="EAN : " />
+                                <p:selectBooleanCheckbox id="chkean" value="#{articleBean.filterEan}" >
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>                                
+                                <p:inputText id="txtean" value="#{articleBean.ean}"/>
+                                
+                                <h:outputText value="Article : " />
+                                <p:selectBooleanCheckbox id="chkarticleid" value="#{articleBean.filterArticleid}">
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>                                          
+                                <p:inputText id="txtarticleid" value="#{articleBean.articleid}"/>
+                                
+                                <h:outputText value="Category : " />
+                                <p:selectBooleanCheckbox id="chkcategoryid" value="#{articleBean.filterCategoryid}">
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>                                
+                                <p:inputText id="txtcategoryid" value="#{articleBean.categoryid}"/>     
+                                <h:outputText value="Product : " />
+                                <p:selectBooleanCheckbox id="chkproductname" value="#{articleBean.filterProductname}">
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>                                
+                                <p:inputText id="txtproductname" value="#{articleBean.productname}"/>     
+                                
+                                <h:outputText value="" />
+                                <h:outputText value="" />
+                                <p:commandButton id="btnfind" value="Find" action="#{articleBean.loadData}" update=":form:dtlist" />    
+                            </h:panelGrid>
+                        </p:panel>                        
+                        <p:messages id="messages"/>                                                
+                        <p:dataTable id="dtlist" value="#{articleBean.lazyModel}" 
+                                     var="item"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15,25,50"
+                                     paginatorAlwaysVisible="true" 
+                                     rows="10" 
+                                     selectionMode="single"
+                                     selection="#{articleBean.selectedObject}"
+                            > 
+                            
+                            <p:ajax event="rowSelect" update=":form:pnldetail" />                                                                                                                                           
+                            <p:column style="width:100px">
+                                <f:facet name="header">
+                                    <h:outputText value="EAN"/>
+                                </f:facet>
+                                <h:outputText value="#{item.ean}"/>
+                            </p:column>
+                            <p:column style="width:100px">
+                                <f:facet name="header">
+                                    <h:outputText value="Article ID"/>
+                                </f:facet>
+                                <h:outputText value="#{item.articleid}"/>
+                            </p:column>
+                            <p:column style="width:100px">
+                                <f:facet name="header">
+                                    <h:outputText value="Category ID"/>
+                                </f:facet>
+                                <h:outputText value="#{item.categoryid}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Product Name"/>
+                                </f:facet>
+                                <h:outputText value="#{item.productname}"/>
+                            </p:column>
+                            <p:column style="width:50px">
+                                <f:facet name="header">
+                                    <h:outputText value="UOM"/>
+                                </f:facet>
+                                <h:outputText value="#{item.uom}"/>
+                            </p:column>                            
+                        </p:dataTable>
+                        <p:panel header="Export All Data">
+                            <h:commandLink immediate="true" >
+                                <p:graphicImage value="/images/excel.png" />
+                                <p:dataExporter type="xls" target="dtlist" fileName="sitelist" />
+                            </h:commandLink>
+
+                            <h:commandLink immediate="true" >
+                                <p:graphicImage value="/images/pdf.png" />
+                                <p:dataExporter type="pdf" target="dtlist" fileName="sitelist"/>
+                            </h:commandLink>
+                            <h:commandLink immediate="true">
+                                <p:graphicImage value="/images/csv.png" />
+                                <p:dataExporter type="csv" target="dtlist" fileName="sitelist" />
+                            </h:commandLink>
+                            <h:commandLink immediate="true">
+                                <p:graphicImage value="/images/xml.png" />
+                                <p:dataExporter type="xml" target="dtlist" fileName="sitelist" />
+                            </h:commandLink>
+                        </p:panel>                         
+                       
+                        
+                        
+                        <p:dialog id="dlgdetail" widgetVar="dlgdetail" modal="true" header="Detail Article">                                                        
+                            <h:panelGrid id="pnldetail" columns="2">
+                                <h:outputText value="Ean:"/>
+                                <h:outputText value="#{articleBean.selectedObject.ean}" title="Ean"/>
+                                <h:outputText value="Articleid:"/>
+                                <h:outputText value="#{articleBean.selectedObject.articleid}" title="Articleid"/>
+                                <h:outputText value="Categoryid:"/>
+                                <h:outputText value="#{articleBean.selectedObject.categoryid}" title="Categoryid"/>
+                                <h:outputText value="Productname:"/>
+                                <h:outputText value="#{articleBean.selectedObject.productname}" title="Productname"/>
+                                <h:outputText value="Uom:"/>
+                                <h:outputText value="#{articleBean.selectedObject.uom}" title="Uom"/>
+                                <h:outputText value="Deleted:"/>
+                                <h:outputText value="#{articleBean.selectedObject.deleted}" title="Deleted"/>
+                                <h:outputText value="Createddate:"/>
+                                <h:outputText value="#{articleBean.selectedObject.createddate}" title="Createddate">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                                <h:outputText value="Createdby:"/>
+                                <h:outputText value="#{articleBean.selectedObject.createdby}" title="Createdby"/>
+                                <h:outputText value="Updateddate:"/>
+                                <h:outputText value="#{articleBean.selectedObject.updateddate}" title="Updateddate">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                                <h:outputText value="Updatedby:"/>
+                                <h:outputText value="#{articleBean.selectedObject.updatedby}" title="Updatedby"/>
+                            </h:panelGrid>                            
+                        </p:dialog>         
+                        
+                        <p:dialog id="dlgdownload" widgetVar="dlgdownload" modal="true" header="Download Article">
+                            <h:panelGrid columns="2">                         
+                                <h:outputText value="Choose File"/>
+                                <p:fileUpload fileUploadListener="#{downloadArticleBean.processFileUpload}"
+                                        mode="advanced"     
+                                        update=":form:dtlist :form:messages"
+                                        sizeLimit="500000000" 
+                                        allowTypes="/(\.|\/)(csv)$/"/>                                                            
+                            </h:panelGrid>
+                        </p:dialog>                                      
+                    </h:form>
+                </f:view>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

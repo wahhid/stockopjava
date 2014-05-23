@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">
+                Site List - Stock - RanchMarket
+            </ui:define>
+
+            <ui:define name="content">
+                <f:event type="preRenderComponent" listener="#{siteBean.loadData()}"/>
+                <f:view>
+                    <h:form id="form">
+                        <h1><h:outputText value="Site List"/></h1>
+                        <p:toolbar>                         
+                            <p:toolbarGroup align="left">                                
+                                <p:commandButton id="btnnew" value="New" ajax="false" action="#{siteBean.add}" immediate="true" image="ui-icon-document" rendered="#{siteBean.allowcreate}" />
+                                <p:commandButton id="btnedit" value="Edit #{siteBean.selectedSite.branchname}" action="#{siteBean.edit}" immediate="true"  image="ui-icon-document"  rendered="#{siteBean.allowupdate}"/>
+                                <p:commandButton id="btndelete" value="Delete" action="#{siteBean.delete}" update=":form:dtlist" image="ui-icon-document" rendered="#{siteBean.allowdelete}" />                                
+                            </p:toolbarGroup>                  
+                            <p:toolbarGroup align="right">
+                                <p:commandButton id="btnview" value="Detail"  image="ui-icon-document"  oncomplete="dlgdetail.show();" rendered="#{siteBean.allowread}"/>                                
+                            </p:toolbarGroup>                               
+                        </p:toolbar>       
+                        <p:panel id="pnlfilter" widgetVar="pnlfilter" header="Filter"  toggleable="true" closable="false" toggleSpeed="500" closeSpeed="2000" collapsed="true">                            
+                            <h:panelGrid columns="3">
+                                <h:outputText value="Site ID : "/>
+                                <p:selectBooleanCheckbox id="chksiteid" value="#{siteBean.filterSiteid}">
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>
+                                <p:inputText id="txtsiteid" value="#{siteBean.siteid}"/>
+                                <h:outputText value=""/>
+                                <h:outputText value=""/>
+                                <p:commandButton id="btnfind" value="Find" action="#{siteBean.loadData}" update=":form:dtlist"/>
+                            </h:panelGrid>
+                        </p:panel>                        
+                        <p:messages/>                        
+                        <p:dataTable id="dtlist"
+                                     value="#{siteBean.lazyModel}" 
+                                     var="item"
+                                     paginator="true" 
+                                     paginatorAlwaysVisible="true" 
+                                     rows="10" 
+                                     selectionMode="single"
+                                     selection="#{siteBean.selectedSite}"
+                                     >                                     
+                            <p:ajax event="rowSelect" update=":form:btnedit :form:pnldetail" />                            
+                            <p:column style="width:100px" >
+                                <f:facet name="header">
+                                    <h:outputText value="ID"/>
+                                </f:facet>
+                                <h:outputText value="#{item.siteid}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="SITE NAME"/>
+                                </f:facet>
+                                <h:outputText value="#{item.branchname}"/>
+                            </p:column>                         
+                        </p:dataTable>
+
+
+                        <p:panel header="Export All Data">
+                            <h:commandLink immediate="true" >
+                                <p:graphicImage value="/images/excel.png" />
+                                <p:dataExporter type="xls" target="dtlist" fileName="sitelist" />
+                            </h:commandLink>
+
+                            <h:commandLink immediate="true" >
+                                <p:graphicImage value="/images/pdf.png" />
+                                <p:dataExporter type="pdf" target="dtlist" fileName="sitelist"/>
+                            </h:commandLink>
+                            <h:commandLink immediate="true">
+                                <p:graphicImage value="/images/csv.png" />
+                                <p:dataExporter type="csv" target="dtlist" fileName="sitelist" />
+                            </h:commandLink>
+                            <h:commandLink immediate="true">
+                                <p:graphicImage value="/images/xml.png" />
+                                <p:dataExporter type="xml" target="dtlist" fileName="sitelist" />
+                            </h:commandLink>
+                        </p:panel> 
+
+                        
+                        <p:dialog id="dlgdetail" widgetVar="dlgdetail" modal="true" header="Detail Site">                                                            
+                            <p:panelGrid id="pnldetail" columns="2">
+                                <h:outputText value="Siteid:"/>
+                                <h:outputText value="#{siteBean.selectedSite.siteid}" title="Siteid"/>
+                                <h:outputText value="Branchname:"/>
+                                <h:outputText value="#{siteBean.selectedSite.branchname}" title="Branchname"/>
+                                <h:outputText value="Deleted:"/>
+                                <h:outputText value="#{siteBean.selectedSite.deleted}" title="Deleted"/>
+                                <h:outputText value="Createddate:"/>
+                                <h:outputText value="#{siteBean.selectedSite.createddate}" title="Createddate">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                                <h:outputText value="Createdby:"/>
+                                <h:outputText value="#{siteBean.selectedSite.createdby}" title="Createdby"/>
+                                <h:outputText value="Updateddate:"/>
+                                <h:outputText value="#{siteBean.selectedSite.updateddate}" title="Updateddate">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                                <h:outputText value="Updatedby:"/>
+                                <h:outputText value="#{siteBean.selectedSite.updatedby}" title="Updatedby"/>
+                            </p:panelGrid>                            
+                        </p:dialog>
+                    </h:form>
+                </f:view>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

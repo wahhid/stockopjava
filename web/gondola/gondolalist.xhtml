@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">
+                Gondola - Stock - Ranch Market
+            </ui:define>
+            <ui:define name="content">
+                <f:event type="preRenderComponent" listener="#{gondolaBean.loadData()}"/>
+                <f:view>
+                    <h:form id="form">
+                        <h1><h:outputText value="Gondola List"/></h1>
+                        <p:toolbar>                         
+                            <p:toolbarGroup align="left">                                
+                                <p:commandButton id="btnnew" value="New" ajax="false"  action="#{gondolaBean.add}"  immediate="true" image="ui-icon-document" rendered="#{gondolaBean.allowcreate}" />
+                                <p:commandButton id="btnedit" value="Edit #{gondolaBean.selectedObject.gondolaname}" ajax="false" action="#{gondolaBean.edit}" immediate="true" image="ui-icon-document" rendered="#{gondolaBean.allowupdate}" />
+                                <p:commandButton id="btndelete" value="Delete" action="#{gondolaBean.delete}" update=":form:dtlist" image="ui-icon-document" rendered="#{gondolaBean.allowdelete}" />                                
+                            </p:toolbarGroup>                  
+                            <p:toolbarGroup align="right">
+                                <p:commandButton id="btnview" value="Detail"  image="ui-icon-document"  oncomplete="dlgdetail.show();" rendered="#{gondolaBean.allowread}" />                                
+                            </p:toolbarGroup>                               
+                        </p:toolbar>                       
+                        <p:panel id="pnlfilter" widgetVar="pnlfilter" header="Filter"  toggleable="true" closable="false" toggleSpeed="500" closeSpeed="2000" collapsed="true">                            
+                            <h:panelGrid columns="3">
+                                <h:outputText value="Gondola ID : " />
+                                <p:selectBooleanCheckbox id="chkgondolaid" value="#{gondolaBean.filterGondolaid}" >
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>
+                                <p:inputText id="txtgondolaid" value="#{gondolaBean.gondolaid}"/>
+                                <h:outputText value=""/>
+                                <h:outputText value=""/>
+                                <p:commandButton id="btnfind" value="Find" action="#{gondolaBean.loadData}" update=":form:dtlist"/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:messages/>                               
+                        <p:dataTable id="dtlist"
+                                     value="#{gondolaBean.lazyModel}" var="item"
+                                     paginator="true" 
+                                     paginatorAlwaysVisible="true" 
+                                     rows="10"                            
+                                     selectionMode="single"      
+                                     selection="#{gondolaBean.selectedObject}">                               
+                            <p:ajax event="rowSelect" update=":form:btnedit :form:pnldetail" />                                                        
+                            <p:column style="width:100px" sortBy="#{item.gondolaname}">
+                                <f:facet name="header">
+                                    <h:outputText value="Gondola ID"/>
+                                </f:facet>
+                                <h:outputText value="#{item.gondolaname}"/>
+                            </p:column>
+                            <p:column id="gondolanameheader" sortBy="#{item.description}">
+                                <f:facet name="header">
+                                    <h:outputText value="Gondola Name"/>
+                                </f:facet>
+                                <h:outputText value="#{item.description}"/>                                
+                            </p:column>                          
+                            <p:column style="width:100px;text-align:center" >
+                                <f:facet name="header">
+                                    <h:outputText value="Status"/>
+                                </f:facet>
+                                <p:selectBooleanCheckbox value="#{item.status}" disabled="true" />
+                            </p:column>                            
+                        </p:dataTable>
+                        <p:panel id="pnlexport" widgetVar="pnlexport" header="Export All Data">
+                            <h:commandLink immediate="true" >
+                                <p:graphicImage value="/images/excel.png" />
+                                <p:dataExporter type="xls" target="dtlist" fileName="gondolaist" />
+                            </h:commandLink>
+
+                            <h:commandLink immediate="true" >
+                                <p:graphicImage value="/images/pdf.png" />
+                                <p:dataExporter type="pdf" target="dtlist" fileName="gondolalist"/>
+                            </h:commandLink>
+                            <h:commandLink immediate="true">
+                                <p:graphicImage value="/images/csv.png" />
+                                <p:dataExporter type="csv" target="dtlist" fileName="gondolalist" />
+                            </h:commandLink>
+                            <h:commandLink immediate="true">
+                                <p:graphicImage value="/images/xml.png" />
+                                <p:dataExporter type="xml" target="dtlist" fileName="gondolalist" />
+                            </h:commandLink>
+                        </p:panel>                                                                      
+                        <p:dialog id="dlgdetail" width="400"  widgetVar="dlgdetail" modal="true" header="Detail Gondola">                            
+                            <p:panelGrid id="pnldetail" columns="2" style="width:100%" >
+                                <h:outputText value="Gondola ID:"/>
+                                <h:outputText value="#{gondolaBean.selectedObject.gondolaname}" title="Gondolaid"/>
+                                <h:outputText value="Gondola Name:"/>
+                                <h:outputText value="#{gondolaBean.selectedObject.description}" title="Gondolaname"/>
+                                <h:outputText value="Site:"/>
+                                <h:outputText value="#{gondolaBean.selectedObject.site.branchname}" title="Site"/>                                
+                                <h:outputText value="Status:"/>                                
+                                <h:outputText value="#{gondolaBean.selectedObject.status}" title="Status"/>
+                            </p:panelGrid>
+                        </p:dialog>
+                    </h:form>
+                </f:view>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

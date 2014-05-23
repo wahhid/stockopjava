@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene Scope="Project" version="2">
+    <Scope Scope="Faces Configuration Only"/>
+    <Scope Scope="Project">
+        <Node id="testpage/stock/List.jsp" x="900" y="600" zoom="true"/>
+        <Node id="site/siteadd.xhtml" x="650" y="900" zoom="true"/>
+        <Node id="template.xhtml" x="400" y="150" zoom="true"/>
+        <Node id="user/roleslist.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="test/test01.xhtml" x="1900" y="150" zoom="true"/>
+        <Node id="gondola/gondolalist.xhtml" x="150" y="450" zoom="true"/>
+        <Node id="periode/periodelist.xhtml" x="650" y="750" zoom="true"/>
+        <Node id="testpage/stock/Detail.jsp" x="150" y="150" zoom="true"/>
+        <Node id="user/useradd.xhtml" x="150" y="1050" zoom="true"/>
+        <Node id="gondola/gondolaedit.xhtml" x="1400" y="300" zoom="true"/>
+        <Node id="gondola/gondolaadd.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="product/productlist.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="user/employeetypelist.xhtml" x="650" y="600" zoom="true"/>
+        <Node id="transstock/transstocklist.xhtml" x="650" y="300" zoom="true"/>
+        <Node id="site/siteedit.xhtml" x="1150" y="300" zoom="true"/>
+        <Node id="header.xhtml" x="635" y="219" zoom="true"/>
+        <Node id="testpage/stock/New.jsp" x="1650" y="300" zoom="true"/>
+        <Node id="user/changepassword.xhtml" x="150" y="750" zoom="true"/>
+        <Node id="mainpage.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="site/sitelist.xhtml" x="70" y="67" zoom="false"/>
+        <Node id="user/employeetypeadd.xhtml" x="400" y="300" zoom="true"/>
+        <Node id="user/employeetypeedit.xhtml" x="900" y="750" zoom="true"/>
+        <Node id="stock/stocklist.xhtml" x="400" y="600" zoom="true"/>
+        <Node id="transstock/transtockdetaillist.xhtml" x="1150" y="450" zoom="true"/>
+        <Node id="sap/saplist.xhtml" x="150" y="900" zoom="true"/>
+        <Node id="user/useredit.xhtml" x="400" y="750" zoom="true"/>
+        <Node id="sap/refreshsaplist.xhtml" x="900" y="300" zoom="true"/>
+        <Node id="testpage/stock/Edit.jsp" x="400" y="900" zoom="true"/>
+        <Node id="user/usersitelist.xhtml" x="1150" y="600" zoom="true"/>
+        <Node id="product/productadd.xhtml" x="400" y="450" zoom="true"/>
+        <Node id="periode/periodeadd.xhtml" x="1400" y="450" zoom="true"/>
+        <Node id="upload/index.xhtml" x="1650" y="150" zoom="true"/>
+        <Node id="report/StockTakingList.xhtml" x="1400" y="150" zoom="true"/>
+        <Node id="report/StockTakingListMarch.xhtml" x="400" y="1050" zoom="true"/>
+        <Node id="index.xhtml" x="650" y="150" zoom="true"/>
+        <Node id="product/productedit.xhtml" x="900" y="450" zoom="true"/>
+        <Node id="user/userlist.xhtml" x="386" y="225" zoom="true"/>
+        <Node id="periode/periodeedit.xhtml" x="150" y="300" zoom="true"/>
+    </Scope>
+    <Scope Scope="All Faces Configurations"/>
+</Scene>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>TODO supply a title</title>
+    </h:head>
+    <h:body>
+        <f:view>
+            <h:form id="form">                
+                <h1><h:outputText value="List"/></h1>
+                <p:commandButton id="btnedit" value="Edit" onclick="dlgedit.show()"/>
+                <p:dataTable value="#{gondolaBean.all}" var="item"
+                             rowKey="#{item.gondolaid}"
+                             selectionMode="single"
+                             selection="#{gondolaBean.selectedObject}">
+                    <p:ajax event="rowSelect" update=":form:pnledit" oncomplete="dlgedit.show();" />                                       
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Gondolaid"/>
+                        </f:facet>
+                        <h:outputText value="#{item.gondolaid}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Gondolaname"/>
+                        </f:facet>
+                        <h:outputText value="#{item.gondolaname}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Siteid"/>
+                        </f:facet>
+                        <h:outputText value="#{item.siteid}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Status"/>
+                        </f:facet>
+                        <h:outputText value="#{item.status}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Deleted"/>
+                        </f:facet>
+                        <h:outputText value="#{item.deleted}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Createddate"/>
+                        </f:facet>
+                        <h:outputText value="#{item.createddate}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Createdby"/>
+                        </f:facet>
+                        <h:outputText value="#{item.createdby}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Updateddate"/>
+                        </f:facet>
+                        <h:outputText value="#{item.updateddate}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Updatedby"/>
+                        </f:facet>
+                        <h:outputText value="#{item.updatedby}"/>
+                    </p:column>
+                </p:dataTable> 
+                
+                <p:dialog id="dlgedit" widgetVar="dlgedit" modal="true" header="Edit Gondola">                               
+                
+                        <h1><h:outputText value="Create/Edit"/></h1>
+                        <h:panelGrid id="pnledit" columns="2">
+                            <h:outputLabel value="Gondolaid:" for="gondolaid" />
+                            <h:inputText id="gondolaid" value="#{gondolaBean.selectedObject.gondolaid}" title="Gondolaid" required="true" requiredMessage="The Gondolaid field is required."/>
+                            <h:outputLabel value="Gondolaname:" for="gondolaname" />
+                            <h:inputText id="gondolaname" value="#{gondolaBean.selectedObject.gondolaname}" title="Gondolaname" required="true" requiredMessage="The Gondolaname field is required."/>
+                            <h:outputLabel value="Siteid:" for="siteid" />
+                            <h:inputText id="siteid" value="#{gondolaBean.selectedObject.siteid}" title="Siteid" required="true" requiredMessage="The Siteid field is required."/>
+                            <h:outputLabel value="Status:" for="status" />
+                            <h:inputText id="status" value="#{gondolaBean.selectedObject.status}" title="Status" required="true" requiredMessage="The Status field is required."/>
+                            <h:outputLabel value="Deleted:" for="deleted" />
+                            <h:inputText id="deleted" value="#{gondolaBean.selectedObject.deleted}" title="Deleted" required="true" requiredMessage="The Deleted field is required."/>
+                            <h:outputLabel value="Createddate:" for="createddate" />
+                            <h:inputText id="createddate" value="#{gondolaBean.selectedObject.createddate}" title="Createddate" required="true" requiredMessage="The Createddate field is required.">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:inputText>
+                            <h:outputLabel value="Createdby:" for="createdby" />
+                            <h:inputText id="createdby" value="#{gondolaBean.selectedObject.createdby}" title="Createdby" required="true" requiredMessage="The Createdby field is required."/>
+                            <h:outputLabel value="Updateddate:" for="updateddate" />
+                            <h:inputText id="updateddate" value="#{gondolaBean.selectedObject.updateddate}" title="Updateddate" required="true" requiredMessage="The Updateddate field is required.">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:inputText>
+                            <h:outputLabel value="Updatedby:" for="updatedby" />
+                            <h:inputText id="updatedby" value="#{gondolaBean.selectedObject.updatedby}" title="Updatedby" required="true" requiredMessage="The Updatedby field is required."/>
+                        </h:panelGrid>
+                
+
+                
+                
+                </p:dialog>                                
+            </h:form>            
+        </f:view>
+    </h:body>
+</html>

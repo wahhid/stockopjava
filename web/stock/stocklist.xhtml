@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">
+                Stock - Stock - Ranch Market
+            </ui:define>
+
+            <ui:define name="content">
+                <f:event type="preRenderComponent" listener="#{stockBean.loadData()}"/>
+                <f:view>
+                    <h:form id="form">
+                        <h1><h:outputText value="SAP Stock List"/></h1>
+                        <p:toolbar>              
+                            <p:toolbarGroup align="left">     
+                                <p:menuButton value="Download" >
+                                    <p:menuitem value="Stock" onclick="dlgdownloadstock.show();" icon="ui-icon-arrowreturnthick-1-w" ></p:menuitem>                                                                            
+                                    <p:menuitem value="Pending Sales" onclick="dlgdownloadpending.show();" icon="ui-icon-arrowreturnthick-1-w" ></p:menuitem>                                    
+                                </p:menuButton>
+                            </p:toolbarGroup>                               
+                            <p:toolbarGroup align="right">
+                                <p:commandButton id="btnview" value="Detail"  image="ui-icon-document"  oncomplete="dlgdetail.show();"/>                                
+                            </p:toolbarGroup>                               
+                        </p:toolbar>
+                        <p:panel header="Filter" toggleable="true" closable="false" toggleSpeed="500" closeSpeed="2000" collapsed="true" >
+                            <h:panelGrid columns="3">                                
+                                <h:outputText value="Periode : " />
+                                <p:selectBooleanCheckbox id="chkperiodeid" value="#{stockBean.filterPeriodeid}" >
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>
+                                <p:selectOneMenu value="#{stockBean.periodeid}">
+                                    <f:selectItems value="#{periodeBean.all}" var="periode" itemLabel="#{periode.periodename} - #{periode.description}" itemValue="#{periode.periodeid}"/>                                                                 
+                                </p:selectOneMenu>                                
+                                <h:outputText value="Article : " />
+                                <p:selectBooleanCheckbox id="chkarticleid" value="#{stockBean.filterArticleid}">
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>                                
+                                <p:inputText id="txtarticleid" value="#{stockBean.articleid}"/>
+                                <p:commandButton id="btnfind" value="Find" action="#{stockBean.loadData}" update=":form:dtlist" />    
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:messages id="messages" />        
+                        
+                        <p:dataTable id="dtlist" value="#{stockBean.lazyModel}" 
+                                     var="item"
+                                     paginator="true" 
+                                     paginatorAlwaysVisible="true" 
+                                     rows="10"                                   
+                                     selectionMode="single"
+                                     selection="#{stockBean.selectedObject}"
+                                     >
+                            <p:ajax event="rowSelect" update=":form:pnldetail" />
+                            
+                            <p:column style="width:50px;" >
+                                <f:facet name="header">
+                                    <h:outputText value="ID"/>
+                                </f:facet>
+                                <h:outputText value="#{item.id}"/>
+                            </p:column>
+                            <p:column style="width:75px" >
+                                <f:facet name="header">
+                                    <h:outputText value="Pid"/>
+                                </f:facet>
+                                <h:outputText value="#{item.pid}"/>
+                            </p:column>                                                      
+                            <p:column >
+                                <f:facet name="header">
+                                    <h:outputText value="Articleid"/>
+                                </f:facet>
+                                <h:outputText value="#{item.articleid}"/>
+                            </p:column>                          
+                            <p:column style="width:60px" rendered="#{authBean.allowadmin}" >
+                                <f:facet name="header">
+                                    <h:outputText value="Qty"/>
+                                </f:facet>
+                                <h:outputText value="#{item.qty}"/>
+                            </p:column>                            
+                            <p:column style="width:60px">
+                                <f:facet name="header">
+                                    <h:outputText value="Pending"/>
+                                </f:facet>
+                                <h:outputText value="#{item.pendingqty}"/>
+                            </p:column>                                   
+                        </p:dataTable>
+                        <p:dialog id="dlgdetail" widgetVar="dlgdetail" modal="true" header="Detail Stock">                            
+                            <p:panelGrid id="pnldetail" columns="2">
+                                <h:outputText value="Id:"/>
+                                <h:outputText value="#{stockBean.selectedObject.id}" title="Id"/>
+                                <h:outputText value="Siteid:"/>
+                                <h:outputText value="#{stockBean.selectedObject.site.branchname}" title="Siteid"/>
+                                <h:outputText value="Siteid:"/>
+                                <h:outputText value="#{stockBean.selectedObject.pid}" title="Siteid"/>                               
+                                <h:outputText value="Periodeid:"/>
+                                <h:outputText value="#{stockBean.selectedObject.periode.periodename}" title="Periodeid"/>
+                                <h:outputText value="Articleid:"/>
+                                <h:outputText value="#{stockBean.selectedObject.articleid}" title="Articleid"/>
+                                <h:outputText value="Qty:" rendered="#{authBean.allowadmin}" />
+                                <h:outputText value="#{stockBean.selectedObject.qty}" title="Qty" rendered="#{authBean.allowadmin}" />                                
+                                <h:outputText value="Pendingqty:"/>
+                                <h:outputText value="#{stockBean.selectedObject.pendingqty}" title="Pendingqty"/>                                
+                            </p:panelGrid>                            
+                        </p:dialog>
+                        
+                        <p:dialog id="dlgdownloadstock" widgetVar="dlgdownloadstock" modal="true" header="Download Stock">
+                            <h:panelGrid columns="2">                                          
+                                <h:outputText value="Periode"/>
+                                <p:selectOneMenu id="cbperiodestock" value="#{downloadStockBean.periodeid}">
+                                    <f:selectItems value="#{periodeBean.all}" var="periode" itemLabel="#{periode.periodename} - #{periode.description}" itemValue="#{periode.periodeid}"/>                                                                 
+                                    <p:ajax update=":form:cbperiodestock"/>
+                                </p:selectOneMenu>
+                                <h:outputText value="Choose File"/>
+                                <p:fileUpload fileUploadListener="#{downloadStockBean.processFileUpload}"
+                                        mode="advanced"         
+                                        update=":form:dtlist :form:messages"                                        
+                                        allowTypes="/(\.|\/)(csv)$/"
+                                        />                                                            
+                            </h:panelGrid>                            
+                        </p:dialog>
+                        <p:dialog id="dlgdownloadpending" widgetVar="dlgdownloadpending" modal="true" header="Download Pending Sales">
+                            <h:panelGrid columns="2">                         
+                                <h:outputText value="Periode"/>
+                                <p:selectOneMenu id="cbperiodepending" value="#{downloadPendingBean.periodeid}">
+                                    <f:selectItems value="#{periodeBean.all}" var="periode" itemLabel="#{periode.periodename} - #{periode.description}" itemValue="#{periode.periodeid}"/>                                                                 
+                                    <p:ajax update=":form:cbperiodepending"/>
+                                </p:selectOneMenu>
+                                <h:outputText value="Choose File"/>
+                                <p:fileUpload fileUploadListener="#{downloadPendingBean.processFileUpload}"
+                                        mode="advanced"         
+                                        update=":form:dtlist :form:messages"                                        
+                                        allowTypes="/(\.|\/)(csv)$/"/>                                                            
+                            </h:panelGrid>                               
+                        </p:dialog>          
+                    </h:form>
+                </f:view>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

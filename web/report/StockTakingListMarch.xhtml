@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"      
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">
+                Report - Stock System - Ranch Market
+            </ui:define>
+            <ui:define name="content">
+                <f:view>
+                    <h:form>
+                        <p:messages/>
+                        <p:panel header="Report Parameters" >
+                            <h:panelGrid columns="2">                                                      
+                                <h:outputText value="Periode"/>
+                                <p:selectOneMenu value="#{reportStockBean.periodeid}">
+                                    <f:selectItems value="#{periodeBean.all}" var="periode" itemLabel="#{periode.periodename} - #{periode.description}" itemValue="#{periode.periodeid}"/>                                                                 
+                                </p:selectOneMenu>                                                                
+                                <h:outputText value="Gondola"/>                                
+                                <p:selectOneRadio id="options" value="#{reportStockBean.filterGondola}">
+                                    <f:selectItem itemLabel="All" itemValue="00"/>
+                                    <f:selectItem itemLabel="Filter" itemValue="01"/>
+                                    <p:ajax/>
+                                </p:selectOneRadio>  
+                                <h:outputText value=""/>
+                                <h:panelGrid columns="2">
+                                    <h:outputText value="From"/>
+                                    <h:outputText value="To"/>
+                                    <p:inputText id="txtform" value="#{reportStockBean.from}"/>                                   
+                                    <p:inputText id="txtto" value="#{reportStockBean.to}"/>
+                                </h:panelGrid>
+                                <h:outputText value="Product Info"/>    
+                                <p:selectOneMenu value="#{reportStockBean.productinfo}">
+                                    <f:selectItem itemLabel="All" itemValue="00"/>    
+                                    <f:selectItem itemLabel="No Product Info" itemValue="01"/>
+                                </p:selectOneMenu>                                                                                             
+                                <h:outputText value="Quantity"/>    
+                                <p:selectOneMenu value="#{reportStockBean.variant}">
+                                    <f:selectItem itemLabel="All" itemValue="00"/>    
+                                    <f:selectItem itemLabel="Varian Only" itemValue="01"/>
+                                </p:selectOneMenu>
+                                <h:outputText value="March Code (Min 2 Digit)"/>                                
+                                <p:inputText value="#{reportStockBean.marchcode}"/>
+                            </h:panelGrid>                            
+                        </p:panel>
+                        <p:panel header="View or Download Report">
+                            <h:panelGrid columns="3">                                    
+                                <h:commandLink id="linkview" action="#{reportStockBean.rptStockTakingMarchList}" target="_blank">
+                                     <p:graphicImage value="/images/pdf.png" />
+                                </h:commandLink>                                       
+                            </h:panelGrid>                            
+                        </p:panel>                        
+                    </h:form>
+                </f:view>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

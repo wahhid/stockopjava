@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>
+            
+        </title>            
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <h:form>
+                <p:separator/>
+                <h:panelGrid columns="2">                   
+                    <p:menuButton value="Profile : (#{authBean.username}) #{authBean.fullname} / #{authBean.siteid} ">
+                        <p:menuitem id="btnchangepassword" value="Change Password" action="#{userBean.changepassword}" ></p:menuitem>
+                    </p:menuButton>
+                    <p:ajaxStatus style="width:16px;height:16px;" id="ajaxStatusPanel">
+                            <f:facet name="start">
+                                    <h:graphicImage value="/images/ajaxloading.gif" />
+                            </f:facet>
+
+                            <f:facet name="complete">
+                                    <h:outputText value="" />
+                            </f:facet>
+                    </p:ajaxStatus>                  
+                </h:panelGrid>
+                <p:separator/>
+                <p:menubar>
+                    <p:submenu label="File" icon="ui-icon-document">                        
+                        <p:menuitem value="Logout" action="#{authBean.Logout}" ajax="false" immediate="true" />                                                
+                    </p:submenu>
+                    <p:submenu label="Master" icon="ui-icon-document">                        
+                        <p:menuitem value="Site" url="/faces/site/sitelist.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>                                                                        
+                        <p:menuitem value="Periode" url="/faces/periode/periodelist.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>                                                
+                        <p:menuitem value="Gondola" url="/faces/gondola/gondolalist.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>                                                
+                        <p:menuitem value="Article" url="/faces/product/productlist.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>                                                                                                
+                    </p:submenu>                                       
+                    <p:submenu label="Download" icon="ui-icon-document">                          
+                        <p:menuitem value="Stock and Pending Sales" url="/faces/stock/stocklist.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>                                                                                                                        
+                    </p:submenu>    
+                    <p:submenu label="Upload" icon="ui-icon-document">
+                        <p:menuitem value="SAP Data" url="/faces/sap/saplist.xhtml" icon="ui-icon-arrowreturnthick-1-w" rendered="#{authBean.allowadmin}" ></p:menuitem>                                                
+                        <p:menuitem value="Refresh Data" url="/faces/sap/refreshsaplist.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>                                                
+                    </p:submenu>                     
+                    <p:submenu label="Transaction" icon="ui-icon-document">
+                        <p:menuitem value="Stock" url="/faces/transstock/transstocklist.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>                                                
+                    </p:submenu>                         
+                    <p:submenu label="Report" icon="ui-icon-document">
+                        <p:submenu label="Stock Taking List" icon="ui-icon-document">                            
+                            <p:menuitem value="By Gondola" url="/faces/report/StockTakingList.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>                                                
+                            <p:menuitem value="By Marchandise" url="/faces/report/StockTakingListMarch.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>                                                                            
+                        </p:submenu>
+                    </p:submenu>            
+                    <p:submenu label="Admin" icon="ui-icon-document" rendered="#{authBean.allowadmin}" >
+                        <p:menuitem value="User" url="/faces/user/userlist.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>                                                                        
+                        <p:menuitem value="Employee Type" url="/faces/user/employeetypelist.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>                        
+                    </p:submenu>                               
+                </p:menubar> 
+                
+                <p:dialog id="dlgajax" widgetVar="dlgajax"  modal="true" header="Status" draggable="false" closable="false"  >
+                    <center>                       
+                        <h:outputText value="Loading..."/>
+                        <br/>
+                        <h:graphicImage value="/images/ajaxloadingbar.gif" />
+                    </center>
+                </p:dialog>
+                       
+            </h:form>                    
+        </ui:composition>
+    </h:body>            
+</html>

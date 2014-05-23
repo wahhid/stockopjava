@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">
+                SAP Exporter - Stock System - Ranch Market
+            </ui:define>
+            <ui:define name="content">
+                <f:event type="preRenderComponent" listener="#{sapUploadBean.loadData()}"/>
+                <f:view>
+                    <script type="text/javascript">
+                        function start() {
+                            statusDialog.show();
+                        }
+
+                        function stop() {
+                            statusDialog.hide();
+                        }
+                    </script>
+                    <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
+                        <p:graphicImage value="/design/ajaxloadingbar.gif" />
+                    </p:dialog>                                      
+                    <h:form id="form">
+                        <h1><h:outputText value="SAP Upload"/></h1>
+                        <p:messages/> 
+                        <p:toolbar>
+                            <p:toolbarGroup align="left">
+                                <p:commandButton id="downloadLink" value="Download" ajax="false" icon="ui-icon-arrowthichk-s">
+                                    <p:fileDownload value="#{sapUploadBean.file}" />
+                                </p:commandButton>
+                            </p:toolbarGroup>
+                            <p:toolbarGroup align="right">
+                                <p:commandButton value="Tag for Print" action="#{sapUploadBean.printedRequest()}" update=":form:dtlist" />
+                                <p:commandButton value="Clear Print Tag" action="#{sapUploadBean.clearPrintTag()}" update=":form:dtlist" />
+                                <p:commandButton value="Print Tagged Stock" action="#{sapUploadBean.rptRequestPrinted()}" />                            
+                            </p:toolbarGroup>
+                        </p:toolbar>
+                        <p:panel header="Filter Parameter" collapsed="true" toggleable="true" >
+                            <h:panelGrid id="pnlpar" columns="2">
+                                <h:outputText value="Periode:"/>                                
+                                <p:selectOneMenu id="periodeid"  value="#{sapUploadBean.periodeid}" style="width: 150px;" >
+                                    <f:selectItems value="#{periodeBean.all}" var="periode" itemLabel="#{periode.periodename} - #{periode.description}" itemValue="#{periode.periodeid}"/>                                                                 
+                                </p:selectOneMenu>                                 
+                                <h:outputText value="Article:"/>                                                                                                
+                                <p:inputText value="#{sapUploadBean.articleid}" />                                
+                                <h:outputText value="Printed:"/>
+                                <p:selectBooleanCheckbox value="#{sapUploadBean.filterPrinted}">
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>                                             
+                                <h:outputText value=""/>                                                                
+                                <p:commandButton id="btnrefresh" value="Refresh" action="#{sapUploadBean.loadData}" update=":form:dtlist"/>
+                            </h:panelGrid>                            
+                        </p:panel>                                                                                           
+                        <p:dataTable id="dtlist"
+                                     value="#{sapUploadBean.lazyModel}" 
+                                     var="item"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15,25,50"
+                                     rows="10" 
+                                     rowKey="#{item.id}"                                                                         
+                                     selection="#{sapUploadBean.selectedObjects}"
+                                     rowStyleClass="#{item.printed eq true ? 'old' : null}" >
+                            <p:ajax event="rowSelect" update=":form:pnldetail"/>
+                            <p:column selectionMode="multiple" style="width: 20px" />
+                            <p:column style="width:25px" sortBy="#{item.id}" >
+                                <f:facet name="header">
+                                    <h:outputText value="ID"/>
+                                </f:facet>
+                                <h:outputText value="#{item.id}"/>
+                            </p:column>
+                            <p:column style="width:50px">
+                                <f:facet name="header">
+                                    <h:outputText value="Site ID"/>
+                                </f:facet>
+                                <h:outputText value="#{item.site.siteid}"/>
+                            </p:column>                                       
+                            <p:column style="width:50px">
+                                <f:facet name="header">
+                                    <h:outputText value="PID"/>
+                                </f:facet>
+                                <h:outputText value="#{item.pid}"/>
+                            </p:column>   
+                            
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Article"/>
+                                </f:facet>
+                                <h:outputText value="#{item.articleid}"/>
+                            </p:column>
+                            <p:column style="width:75px" sortBy="#{item.qty}">
+                                <f:facet name="header">
+                                    <h:outputText value="Quantity"/>
+                                </f:facet>
+                                <h:outputText value="#{item.qty}"/>
+                            </p:column>
+                            <p:column style="width:75px" sortBy="#{item.pendingqty}">
+                                <f:facet name="header">
+                                    <h:outputText value="Pending"/>
+                                </f:facet>
+                                <h:outputText value="#{item.pendingqty}"/>
+                            </p:column>
+                            <p:column style="width:75px" sortBy="#{item.opnamqty}">
+                                <f:facet name="header">
+                                    <h:outputText value="Opnam Qty"/>
+                                </f:facet>
+                                <h:outputText value="#{item.opnamqty}"/>
+                            </p:column>                  
+                            <p:column style="width:75px" sortBy="#{item.difqty}">
+                                <f:facet name="header">
+                                    <h:outputText value="Diff Qty"/>
+                                </f:facet>
+                                <h:outputText value="#{item.difqty}"/>
+                            </p:column>                  
+                            <p:column style="width:75px" sortBy="#{item.difunitcost}">
+                                <f:facet name="header">
+                                    <h:outputText value="Total Cost"/>
+                                </f:facet>
+                                <h:outputText value="#{item.difunitcost}"/>
+                            </p:column>                  
+                            <p:column style="width:50px;text-align: center;">
+                                <f:facet name="header">
+                                    <h:outputText value="Printed"/>
+                                </f:facet>
+                                <p:selectBooleanCheckbox value="#{item.printed}" disabled="#{true}"/>
+                            </p:column>                                              
+                            <p:column style="width:125px" sortBy="#{item.refreshdate}">
+                                <f:facet name="header">
+                                    <h:outputText value="Refresh Date"/>
+                                </f:facet>
+                                <h:outputText value="#{item.refreshdate}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>                   
+                        
+                        <p:dialog id="dlgdetail" widgetVar="dlgdetail" modal="true" header="Stock Detail">                                                        
+                            <h:panelGrid id="pnldetail" columns="2">
+                                <h:outputText value="Id:"/>
+                                <h:outputText value="#{sapUploadBean.selectedObject.id}" title="Id"/>
+                                <h:outputText value="Siteid:"/>
+                                <h:outputText value="#{sapUploadBean.selectedObject.site.branchname}" title="Siteid"/>
+                                <h:outputText value="Periodeid:"/>
+                                <h:outputText value="#{sapUploadBean.selectedObject.periode.periodename}" title="Periodeid"/>
+                                <h:outputText value="Articleid:"/>
+                                <h:outputText value="#{sapUploadBean.selectedObject.articleid}" title="Articleid"/>
+                                <h:outputText value="Qty:"/>
+                                <h:outputText value="#{sapUploadBean.selectedObject.qty}" title="Qty"/>
+                                <h:outputText value="Pendingqty:"/>
+                                <h:outputText value="#{sapUploadBean.selectedObject.pendingqty}" title="Pendingqty"/>
+                                <h:outputText value="Opnamqty:"/>
+                                <h:outputText value="#{sapUploadBean.selectedObject.opnamqty}" title="Pendingqty"/>                                
+                            </h:panelGrid>                          
+                        </p:dialog>
+                    </h:form>
+                </f:view>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

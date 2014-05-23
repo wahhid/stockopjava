@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+
+            <ui:define name="title">
+                Periode - Stock System - Ranch Market
+            </ui:define>
+
+            <ui:define name="content">
+                <f:view>
+                    <h:form id="form">
+                        <h1><h:outputText value="Create Periode"/></h1>
+                        <p:toolbar>
+                            <p:toolbarGroup align="left">
+                                <p:commandButton id="btnsave" value="Save" ajax="false" action="#{periodeBean.saveAdd}" image="ui-icon-document"/>
+                                <p:commandButton id="btncancel" value="Cancel" ajax="false" action="#{periodeBean.cancel}" immediate="true" image="ui-icon-document"/>
+                            </p:toolbarGroup>
+                        </p:toolbar>
+                        <p:messages/>
+                        <p:panel header="Create Periode">                            
+                            <h:panelGrid id="pnlnew" columns="3">
+                                <h:outputText value="Periode ID:" />
+                                <p:calendar value="#{periodeBean.periodeDate}" id="periodeid" pattern="yyyyMMdd"/>                                                                    
+                                <p:message for="periodeid" display="icon"/>
+                                <h:outputLabel value="Periode Name:" for="periodename" />
+                                <p:inputText id="periodename"  value="#{periodeBean.object.description}" title="Periodename" required="true" requiredMessage="Periode Name is required." style="width:200px" />
+                                <p:message for="periodename" display="icon"/>
+                            </h:panelGrid>                            
+                        </p:panel>
+                    </h:form>
+                </f:view>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

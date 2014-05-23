@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Stock Op System</title>
+<link rel="stylesheet" type="text/css" href="/StockOp/faces/jsfcrud.css" />
+    </h:head>
+    <h:body>
+        <h:form id="form">                    
+             <p:growl />
+             <p:idleMonitor timeout="5000" onidle="idleDialog.show();" onactive="idleDialog.hide();"/>
+
+             <p:dialog header="Warning !!!" widgetVar="idleDialog" modal="true">
+                          <h:outputText value="Where are you ? Please don't leave the computer without logout" />
+             </p:dialog>
+
+             <p:dialog header="Login" widgetVar="dlg" showEffect="fade" hideEffect="explode">                 
+                <table>
+                    <tr>
+                        <td>Username</td>
+                        <td>:</td>
+                        <td><p:inputText id="username" value="#{authBean.username}" required="true" requiredMessage="Username was empty" ></p:inputText> </td>
+                    </tr>
+                    <tr>
+                        <td>Password</td>
+                        <td>:</td>
+                        <td><p:password  id="password" value="#{authBean.password}" inline="true" required="true" requiredMessage="Password was empty" ></p:password> </td>                            
+                    </tr>
+                    <tr>
+                        <td>Site</td>
+                        <td>:</td>
+                        <td><p:selectOneMenu id="cbsite" value="#{authBean.siteid}">
+                                <f:selectItems value="#{siteBean.all}" var="site" itemLabel="#{site.branchname}" itemValue="#{site.siteid}"/>
+                                <p:ajax update=":form:cbsite"/>
+                            </p:selectOneMenu> 
+                        </td>                            
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td><p:commandButton value="Login" type="submit" action="#{authBean.processLogin}" ajax="false" /></td>                                                        
+                    </tr>
+                </table>	      
+            </p:dialog>
+            
+            <table border="0" width="100%">
+                <tbody>
+                    <tr align="center" >
+                        <td>
+                            <img src="images/ranchmarket.jpg" width="347" height="187" alt="ranchmarket"/>  
+                        </td>
+                    </tr>
+                    <tr>
+                        
+                    </tr>
+                    <tr align="center">
+                        <td>            
+                            <p:commandButton value="Login" type="button" onclick="dlg.show()"  />                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>                               
+        </h:form>
+</h:body>
+
+</html>
+

@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+
+            <ui:define name="title">
+                Employee Type - Stock - Ranch Market
+            </ui:define>
+
+            <ui:define name="content">
+                <f:event type="preRenderComponent" listener="#{employeetypeBean.loadData()}"/>
+                <f:view>
+                    <h:form id="form">
+                        <h1><h:outputText value="Employee Type List"/></h1>
+                        <p:toolbar>                         
+                            <p:toolbarGroup align="left">                                
+                                <p:commandButton id="btnnew" value="New" ajax="false" action="#{employeetypeBean.add}" immediate="true" image="ui-icon-document" />
+                                <p:menuButton id="btnedit" value="Edit #{employeetypeBean.selectedObject.employeetypename}">
+                                    <p:menuitem id="btneditemployeetype" value="Employee Type" ajax="false" action="#{employeetypeBean.edit}" immediate="true"  ></p:menuitem>
+                                    <p:menuitem id="btneditroles" value="Roles" ajax="false" action="#{employeetypeBean.listRoles}" immediate="true"  ></p:menuitem>
+                                </p:menuButton>                                                                                               
+                            </p:toolbarGroup>                                              
+                            <p:toolbarGroup align="right">
+                                
+                            </p:toolbarGroup>                               
+                        </p:toolbar>
+                        <p:panel id="pnlfilter" widgetVar="pnlfilter" header="Filter"  toggleable="true" closable="false" toggleSpeed="500" closeSpeed="2000" collapsed="true">                            
+                            <h:panelGrid columns="3">
+                                <h:outputText value="Employee Type ID : "/>
+                                <p:selectBooleanCheckbox id="chkemployeetypeid" value="#{employeetypeBean.filterEmployeetypeid}" >
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>
+                                <p:inputText id="txtemployeetypeid" value="#{employeetypeBean.employeetypeid}" />
+                                <h:outputText value=""/>
+                                <h:outputText value=""/>
+                                <p:commandButton id="btnfind" value="Find" action="#{employeetypeBean.loadData}" update=":form:dtlist" />
+                            </h:panelGrid>
+                        </p:panel>                              
+                        <p:messages/>                                     
+                        <p:dataTable id="dtlist" 
+                                     value="#{employeetypeBean.lazyModel}" var="item"
+                                     paginator="true" 
+                                     paginatorAlwaysVisible="true" 
+                                     rows="10"
+                                     selectionMode="single"
+                                     selection="#{employeetypeBean.selectedObject}">
+                            <p:ajax event="rowSelect" update=":form:btnedit"/>                                                                                                                
+                            <p:column style="width:100px">
+                                <f:facet name="header">
+                                    <h:outputText value="ID"/>
+                                </f:facet>
+                                <h:outputText value="#{item.employeetypeid}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Description"/>
+                                </f:facet>
+                                <h:outputText value="#{item.employeetypename}"/>
+                            </p:column>                            
+                        </p:dataTable>
+                    </h:form>
+                </f:view>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

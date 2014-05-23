@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+
+            <ui:define name="title">
+                Roles - Stock System - Ranch Market
+            </ui:define>
+            
+            <ui:define name="content">
+                <f:view>
+                    <h:form id="form">
+                        <h1><h:outputText value="#{employeetypeBean.selectedObject.employeetypename} Roles"/></h1>
+                        <p:toolbar>
+                            <p:toolbarGroup align="left">
+                                <p:commandButton id="btnback" value="Back" action="#{employeetypeBean.cancel}" immediate="true" image="ui-icon-document"/>
+                            </p:toolbarGroup>
+                        </p:toolbar>
+                        <p:messages id="messages" showDetail="true"/>                        
+                            <p:panel header="Role List">
+                                <p:dataTable id="dtlist"
+                                             value="#{employeetypeBean.roles}" var="item"
+                                             rowKey="#{item.roleid}"
+                                             selectionMode="single"
+                                             selection="#{employeetypeBean.selectedRoles}">                              
+                                    <p:ajax event="rowSelect" update=":form:pnledit" />
+                                    <p:column style="width:50px" >
+                                        <f:facet name="header">
+                                            <h:outputText value="Role ID"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.roleid}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Form Name"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.formname}"/>
+                                    </p:column>
+                                    <p:column style="width:75px;text-align: center" >
+                                        <f:facet name="header">
+                                            <h:outputText value="Create"/>
+                                        </f:facet>
+                                        <p:selectBooleanCheckbox value="#{item.createrecord}" disabled="true"/>
+                                    </p:column>
+                                    <p:column style="width:75px;text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value="Read"/>
+                                        </f:facet>
+                                        <p:selectBooleanCheckbox value="#{item.readrecord}" disabled="true"/>
+                                    </p:column>
+                                    <p:column style="width:75px;text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value="Update"/>
+                                        </f:facet>
+                                        <p:selectBooleanCheckbox value="#{item.updaterecord}" disabled="true"/>
+                                    </p:column>
+                                    <p:column style="width:75px;text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value="Delete"/>
+                                        </f:facet>
+                                        <p:selectBooleanCheckbox value="#{item.deleterecord}" disabled="true"/>
+                                    </p:column>
+                                    <p:column style="width:75px;text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value="Upload"/>
+                                        </f:facet>
+                                        <p:selectBooleanCheckbox value="#{item.upload}" disabled="true"/>
+                                    </p:column>
+                                    <p:column style="width:75px;text-align: center">
+                                        <f:facet name="header">
+                                            <h:outputText value="Download"/>
+                                        </f:facet>
+                                        <p:selectBooleanCheckbox value="#{item.download}" disabled="true" />
+                                    </p:column>                            
+                                </p:dataTable>                                      
+                            </p:panel>
+                            <p:panel header="Roles Detail" style="width:100%" >
+                                <h:panelGrid id="pnledit" columns="2">                                                                   
+                                    <h:panelGrid columns="2">
+                                        <h:outputLabel value="Roleid:" for="roleid" />
+                                        <h:inputText id="roleid" value="#{employeetypeBean.selectedRoles.roleid}" title="Roleid" required="true" requiredMessage="The Roleid field is required." readonly="true" />
+                                        <h:outputLabel value="Createrecord:" for="createrecord" />                                        
+                                        <p:selectBooleanCheckbox id="createrecord" value="#{employeetypeBean.selectedRoles.createrecord}"/>
+                                        <h:outputLabel value="Readrecord:" for="readrecord" />
+                                        <p:selectBooleanCheckbox id="readrecord" value="#{employeetypeBean.selectedRoles.readrecord}" />
+                                        <h:outputLabel value="Updaterecord:" for="updaterecord" />
+                                        <p:selectBooleanCheckbox id="updaterecord" value="#{employeetypeBean.selectedRoles.updaterecord}" />
+                                        <h:outputLabel value="Deleterecord:" for="deleterecord" />
+                                        <p:selectBooleanCheckbox id="deleterecord" value="#{employeetypeBean.selectedRoles.deleterecord}" />
+                                        <h:outputLabel value="Upload:" for="upload" />
+                                        <p:selectBooleanCheckbox id="upload" value="#{employeetypeBean.selectedRoles.upload}" />
+                                        <h:outputLabel value="Download:" for="download" />
+                                        <p:selectBooleanCheckbox id="download" value="#{employeetypeBean.selectedRoles.download}" />                                        
+                                        <p:commandButton id="btnsave" value="Save" action="#{employeetypeBean.saveEditRoles}" update=":form:dtlist :form:messages"/>
+                                    </h:panelGrid>                                
+                                </h:panelGrid>
+                            </p:panel>                                                                                   
+                    </h:form>
+                </f:view>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

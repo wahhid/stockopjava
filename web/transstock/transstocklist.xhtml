@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">
+                Transaction - Stock System - Ranch Market
+            </ui:define>
+
+            <ui:define name="content">
+                <f:event type="preRenderComponent" listener="#{transstockBean.loadData()}"/>
+                <f:view>
+                    <h:form id="form">
+                        <h1><h:outputText value="Transaction"/></h1>   
+                        <p:toolbar>
+                            <p:toolbarGroup align="left">                                
+                            </p:toolbarGroup>
+                            <p:toolbarGroup align="right">                                
+                                <p:commandButton id="btndetail" value="Detail" image="ui-icon-document" action="#{transstockBean.detail}" ajax="false" />                                                                    
+                            </p:toolbarGroup>
+                        </p:toolbar>                  
+                        <p:panel header="Filter" toggleable="true" closable="false" toggleSpeed="500" closeSpeed="2000" collapsed="true" >
+                            <h:panelGrid columns="3">                                
+                                <h:outputText value="Periode : " />
+                                <p:selectBooleanCheckbox id="chkperiodeid" value="#{transstockBean.filterPeriodeid}" >
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>                                   
+                                <p:selectOneMenu value="#{transstockBean.periodeid}" style="width:200px">
+                                    <f:selectItems value="#{periodeBean.all}" var="periode" itemLabel="#{periode.periodename} - #{periode.description}" itemValue="#{periode.periodeid}"/>                                                                 
+                                </p:selectOneMenu>                                
+                                <h:outputText value="Gondola : " />
+                                <p:selectBooleanCheckbox id="chkgondolaid" value="#{transstockBean.filterGondolaid}">
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>                                                                
+                                <p:inputText id="txtgondolaid" value="#{transstockBean.gondolaid}"/>
+                                <p:commandButton id="btnfind" value="Find" action="#{transstockBean.loadData}" update=":form:dtlist" />    
+                            </h:panelGrid>
+                        </p:panel>                        
+                        <p:messages/>
+                        <p:dataTable id="dtlist"
+                                     value="#{transstockBean.lazyModel}" var="item"
+                                     paginator="true" 
+                                     paginatorAlwaysVisible="true" 
+                                     rows="10"
+                                     selectionMode="single"
+                                     selection="#{transstockBean.selectedObject}"
+                                    >
+                            
+                            <p:ajax event="rowSelect"/>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Trans ID"/>
+                                </f:facet>
+                                <h:outputText value="#{item.transid}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Gondola"/>
+                                </f:facet>
+                                <h:outputText value="#{item.gondola.gondolaname}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Nik"/>
+                                </f:facet>
+                                <h:outputText value="#{item.employee.fullname}"/>
+                            </p:column>                          
+                            <p:column style="width:50px;text-align: center">
+                                <f:facet name="header">
+                                    <h:outputText value="Status"/>
+                                </f:facet>
+                                <p:selectBooleanCheckbox value="#{item.status}" disabled="true"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Created Date"/>
+                                </f:facet>
+                                <h:outputText value="#{item.createddate}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Created By"/>
+                                </f:facet>
+                                <h:outputText value="#{item.createdby}"/>
+                            </p:column>   
+                        </p:dataTable> 
+                    </h:form>
+                </f:view>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

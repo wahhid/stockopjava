@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">
+                User - Stock - Ranch Market
+            </ui:define>
+            
+            <ui:define name="content">
+                <f:event type="preRenderComponent" listener="#{userBean.loadData()}"/>
+                <f:view>
+                    <h:form id="form" prependId="true" >
+                        <h1><h:outputText value="User List"/></h1>
+                        <p:toolbar>                         
+                            <p:toolbarGroup align="left">                                
+                                <p:commandButton id="btnnew" value="New"  ajax="false" action="#{userBean.add}" immediate="true"  image="ui-icon-document" />
+                                <p:menuButton id="btnedit" value="Edit #{userBean.selectedObject.fullname}">
+                                    <p:menuitem id="btnedituser" value="User" ajax="false" action="#{userBean.edit}" immediate="true"  ></p:menuitem>
+                                    <p:menuitem id="btneditsites" value="Site" ajax="false" action="#{userBean.usersite}" immediate="true"  ></p:menuitem>
+                                </p:menuButton>                                                                   
+                                <p:commandButton id="btndelete" value="Delete" action="#{userBean.delete}" update=":form:dtlist" image="ui-icon-document" />
+                                <p:commandButton id="btnchangepassword" value="Change Password for : #{userBean.selectedObject.fullname}" image="ui-icon-document" onclick="dlgpassword.show();" />
+                            </p:toolbarGroup>                  
+                            <p:toolbarGroup align="right">
+                                <p:commandButton id="btnview" value="Detail"  image="ui-icon-document"  onclick="dlgdetail.show();"/>                                
+                            </p:toolbarGroup>                               
+                        </p:toolbar>                        
+                        <p:panel id="pnlfilter" widgetVar="pnlfilter" header="Filter"  toggleable="true" closable="false" toggleSpeed="500" closeSpeed="2000" collapsed="true">                            
+                            <h:panelGrid columns="3">
+                                <h:outputText value="User ID : "/>
+                                <p:selectBooleanCheckbox id="chkuserid" value="#{userBean.filterNik}" >
+                                    <p:ajax/>
+                                </p:selectBooleanCheckbox>
+                                <p:inputText id="txtuserid" value="#{userBean.nik}"/>
+                                <h:outputText value=""/>
+                                <h:outputText value=""/>
+                                <p:commandButton id="btnfind" value="Find" action="#{userBean.loadData}" update=":form:dtlist" />
+                            </h:panelGrid>
+                        </p:panel>                        
+                        <p:messages id="messages" showDetail="true"/>                                                             
+                        <p:dataTable id="dtlist"
+                                     value="#{userBean.lazyModel}" var="item"
+                                     paginator="true" 
+                                     paginatorAlwaysVisible="true" 
+                                     rows="10"
+                                     selectionMode="single"
+                                     selection="#{userBean.selectedObject}">
+                            <f:facet id="header" name="header" >
+                                <p:outputPanel style="text-align: right" >
+                                    <table border="0">
+                                        <tr>
+                                            <td>
+                                                <h:outputText value="Sort List : "/>  
+                                            </td>
+                                            <td>
+                                                <p:selectOneMenu id="chksortfield" value="#{userBean.sortField}">
+                                                    <f:selectItem itemLabel="Nik" itemValue="nik"/>                                        
+                                                    <f:selectItem itemLabel="Fullname" itemValue="fullname"/>                                        
+                                                    <f:selectItem itemLabel="Employee Type" itemValue="employeetype"/>                                        
+                                                </p:selectOneMenu> 
+                                            </td>
+                                            <td>
+                                                <p:selectOneMenu id="chksorttype" value="#{userBean.sortType}">
+                                                    <f:selectItem itemLabel="Ascending" itemValue="asc"/>
+                                                    <f:selectItem itemLabel="Descending" itemValue="desc"/>
+                                                </p:selectOneMenu>
+                                            </td>
+                                            <td>
+                                                <p:commandButton id="btnsort" value="Sort" action="#{userBean.loadData}" update=":form:dtlist"/>
+                                            </td>
+                                        </tr>
+                                    </table>                                                                                                                                                                                                                      
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:ajax event="rowSelect" update=":form:btnedit :form:dlgdetail :form:btnchangepassword " />                                                                                    
+                            <p:column style="width:100px">
+                                <f:facet name="header">
+                                    <h:outputText value="NIK"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nik}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Full Name"/>
+                                </f:facet>
+                                <h:outputText value="#{item.fullname}"/>
+                            </p:column>
+                            <p:column style="width:100px;text-align: center;">
+                                <f:facet name="header">
+                                    <h:outputText value="Status"/>
+                                </f:facet>
+                                <p:selectBooleanCheckbox value="#{item.status}" disabled="true"/>
+                            </p:column>                            
+                        </p:dataTable>
+                        
+                        <p:dialog id="dlgdetail" widgetVar="dlgdetail" modal="true" header="Detail User">                            
+                            <p:panelGrid id="pnldetail" columns="2">
+                                <h:outputText value="Nik:"/>
+                                <h:outputText value="#{userBean.selectedObject.nik}" title="Nik"/>
+                                <h:outputText value="Fullname:"/>
+                                <h:outputText value="#{userBean.selectedObject.fullname}" title="Fullname"/>
+                                <h:outputText value="Employeetype:"/>
+                                <h:outputText value="#{userBean.selectedObject.employeetype.employeetypename}" title="Employeetype"/>
+                                <h:outputText value="Status:"/>
+                                <h:outputText value="#{userBean.selectedObject.status}" title="Status"/>
+                                <h:outputText value="Createddate:"/>
+                                <h:outputText value="#{userBean.selectedObject.createddate}" title="Createddate">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                                <h:outputText value="Createdby:"/>
+                                <h:outputText value="#{userBean.selectedObject.createdby}" title="Createdby"/>
+                                <h:outputText value="Updateddate:"/>
+                                <h:outputText value="#{userBean.selectedObject.updateddate}" title="Updateddate">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                                <h:outputText value="Updatedby:"/>
+                                <h:outputText value="#{userBean.selectedObject.updatedby}" title="Updatedby"/>
+                            </p:panelGrid>
+                        </p:dialog>                      
+                        
+                        <p:dialog id="dlgpassword" header="Change Password" widgetVar="dlgpassword" modal="true">
+                            <h:panelGrid id="pnlpassword" columns="2">
+                                <h:outputText value="New Password"/>
+                                <p:password id="txtpassword" value="#{userBean.newpassword}" />
+                                <p:commandButton id="btnsave" value="Save" action="#{userBean.changeUserPassword}" oncomplete="dlgpassword.hide();" update=":form:messages :form:pnlpassword" />
+                                <p:commandButton id="btncancel" value="Cancel" onclick="dlgpassword.hide();"/>                                
+                            </h:panelGrid>
+                        </p:dialog>
+                    </h:form>
+                </f:view>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

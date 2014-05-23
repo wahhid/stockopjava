@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">
+                User - System Stock - Ranch Market
+            </ui:define>
+            
+            <ui:define name="content">                
+                <f:view>
+                    <h:form id="form">
+                        <h1><h:outputText value="Employee Site List"/></h1>
+                        <p:toolbar>
+                            <p:toolbarGroup align="left">
+                                <p:commandButton id="btnback" value="Back" image="ui-icon-document" action="#{userBean.backtoUsersite}" ajax="false" immediate="true" />                                                                    
+                            </p:toolbarGroup>
+                            <p:toolbarGroup align="right">
+                                <p:commandButton id="btndelete" action="#{userBean.deleteFromSite}" value="Delete #{userBean.selectedEmployeesite.site.branchname}" update=":form:dtlist" image="ui-icon-document"/>
+                            </p:toolbarGroup>
+                        </p:toolbar>                                
+                        <p:messages id="messages"/>                        
+                        <p:dataTable id="dtlist" value="#{userBean.employeesites}" var="item"
+                                     paginator="true"
+                                     rows="10"
+                                     rowKey="#{item.id}"
+                                     selectionMode="single"
+                                     selection="#{userBean.selectedEmployeesite}">
+                            <p:ajax event="rowSelect" update=":form:btndelete"/>                             
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Nik"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nik}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Siteid"/>
+                                </f:facet>
+                                <h:outputText value="#{item.site.branchname}"/>
+                            </p:column>
+                        </p:dataTable>
+                        <p:panel header="Site Role Update" >
+                            <h:panelGrid columns="2">
+                                <h:outputText value="Site : "/>
+                                <p:selectOneMenu value="#{userBean.siteid}">
+                                    <f:selectItems value="#{siteBean.all}" var="site" itemLabel="#{site.branchname}" itemValue="#{site.siteid}" />
+                                </p:selectOneMenu>
+                                <h:outputText value=""/>
+                                <p:commandButton id="btnadd" value="Add" action="#{userBean.createEmployeesite}" update=":form:dtlist :form:messages" />
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:form>
+                </f:view>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

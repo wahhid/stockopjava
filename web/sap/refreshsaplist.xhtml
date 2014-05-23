@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">
+                Refresh SAP List - Stock System - Ranch Market
+            </ui:define>       
+            <ui:define name="content">
+                <f:view>
+                    <h:form id="form">
+                        <h1><h:outputText value="Refresh Data"/></h1>
+                        <p:toolbar>
+                            <p:toolbarGroup align="left" >
+                                <p:commandButton id="btnrefreshdata" value="Refresh Data" action="#{sapUploadBean.updateOpnamqty()}" image="ui-icon-document" update=":form:messages :form:btnrefreshdata" />
+                            </p:toolbarGroup>
+                            <p:toolbarGroup align="right" >                                                                
+                            </p:toolbarGroup>
+                        </p:toolbar>                        
+                        <p:messages id="messages"/>
+                        <p:panel header="Refresh Data" >
+                            <h:panelGrid columns="2">
+                                <h:outputText value="Periode"/>
+                                <p:selectOneMenu value="#{sapUploadBean.refreshperiodeid}">
+                                    <f:selectItems value="#{periodeBean.all}" var="periode" itemLabel="#{periode.periodename} - #{periode.description}" itemValue="#{periode.periodeid}"/>                                                                 
+                                </p:selectOneMenu>                                                               
+                            </h:panelGrid>                            
+                        </p:panel>
+                    </h:form>
+                </f:view>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>
